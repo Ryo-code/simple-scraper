@@ -1,19 +1,10 @@
-var cheerio = require('cheerio');
+// include the libraries we need
 var request = require('request');
+var cheerio = require('cheerio');
 
-request({
-    method: 'GET',
-    url: 'https://github.com/showcases'
-}, function(err, response, body) {
-    if (err) return console.error(err);
+var $ = cheerio.load('<h2 class="title">Original text</h2>');
 
-    // Tell Cherrio to load the HTML
-    console.log(body)
-    $ = cheerio.load(body);
-    $('li.collection-card').each(function() {
-            var href = $('a.collection-card-image', this).attr('href');
-            if (href.lastIndexOf('/') > 0) {
-                console.log($('h3', this).text());
-            }
-    });
-});
+$('h2.title').text('New stuff!');
+$('h2').addClass('welcome');
+
+console.log($.html()); //<h2 class="title welcome">Hello there!</h2>
