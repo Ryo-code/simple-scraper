@@ -1,20 +1,15 @@
-// include the libraries we need
 var request = require('request');
 var cheerio = require('cheerio');
 
 request('https://www.beagreatteacher.com/daily-fun-fact/', function(err, resp, html) {
     if (!err){
         $ = cheerio.load(html);
-        // console.log(html);
-        console.log($('main.content').find('h2').text())
-        // console.log($('main.content.0.children'));
-        // console.log($('.logo-subtext').text());
+        
+        var funFactsObj = $('main.content').find('h2').next().text()
+        // console.log(funFactsObj, "... this is a...", typeof(funFactsObj))
+
+        var factOfTheDay = $('span:contains("Random Fact of the Day:")').parent().parent().next().text() //It's weird because of the way their HTML is structured
+        
+        console.log("Random fact:", factOfTheDay);
     }
 });
-
-// var $ = cheerio.load('<h2 class="title">Original text</h2>');
-
-// $('h2.title').text('New stuff!');
-// $('h2').addClass('welcome');
-
-// console.log($.html()); //<h2 class="title welcome">Hello there!</h2>
