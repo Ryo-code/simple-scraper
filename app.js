@@ -3,7 +3,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var rp = require('request-promise'); //使うかどうか分からない
 
-var wiktionaryWOTD = () => {
+var quoteOfTheDay = () => {
   request('https://en.wikiquote.org/wiki/Main_Page', (err, resp, html) => {
     if(!err) {
       var $ = cheerio.load(html);
@@ -18,13 +18,13 @@ var wiktionaryWOTD = () => {
       console.log("");
       console.log(actualQuote);
       console.log("");
-      console.log(quotedBy)
+      console.log(quotedBy);
 
     }
   })
 }
 
-wiktionaryWOTD();
+// quoteOfTheDay();
 
 
 var merriamWebster = () => {
@@ -77,7 +77,7 @@ var factOfTheDay = () => {
   request('https://www.beagreatteacher.com/daily-fun-fact/', function (err, resp, html) {
     if (!err) {
       var $ = cheerio.load(html);
-      var factOfTheDay = $('span:contains("Random Fact of the Day:")').parent().parent().next().text() //It's weird because of the way their HTML is structured
+      var factOfTheDay = $('span:contains("Random Fact of the Day:")').parent().next().text() //It's weird because of the way their HTML is structured
       console.log("Random fact:", factOfTheDay);
     }
   });
