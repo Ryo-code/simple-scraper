@@ -24,7 +24,6 @@ var quoteOfTheDay = () => {
   })
 }
 
-// quoteOfTheDay();
 
 
 var merriamWebster = () => {
@@ -34,34 +33,31 @@ var merriamWebster = () => {
       var $ = cheerio.load(html);
       var todaysWord = $('.word-and-pronunciation h1').text();
       var wordType = $('.main-attr').text().trim();
-      var pronuciation = $('.word-syllables').text().trim();
+      var pronunciation = $('.word-syllables').text().trim();
 
-      var defs = $('.wod-definition-container').text();
+      //NOTE: Don't change the ORDER of these variables!
+      var entireDefinitionsBox = $('.wod-definition-container').text();
+      var exampleOne = $('.wod-definition-container h2:contains("Examples")').next().text();
+      var exampleTwo = $('.wod-definition-container h2:contains("Examples")').next().next().text();
+      var exampleChars = exampleOne.length + exampleTwo.length
+      var definitionsOnly = entireDefinitionsBox.slice(35, -exampleChars -40).trim();
+      var didYouKnow = $('.wod-did-you-know-container').children().next().text();
 
-      var beforeExamples = defs.split("Examples")
+      console.log("Word of the day:", todaysWord, "(" + wordType + ")" ,"[" + pronunciation + "]");
+      console.log("~ ~ ~ ~ ~ ~ ~ ~ ~")
+      console.log(definitionsOnly) //You have to experiment with .slice() on different days (you could do -40, -50, etc.)
+      console.log("~ ~ ~ ~ ~ ~ ~ ~ ~")
+      console.log("Example 1 -->", exampleOne); //DONE!
+      console.log("")
+      console.log("Example 2 -->", exampleTwo); //DONE!
+      console.log("- - - - - - - - - - - - - - - - - - - - ")
+      console.log("Food for thought:", didYouKnow); //DONE!!! (though there are no italics)
 
-      // var defSplits = defs.split(":");
-      // // var noLines = defSplits.split("/n");
-      // var onlyDefs = [];
-      // for(var i = 0; i < defSplits.length; i++){
-      //   if(defSplits[i].length > 4){
-      //     onlyDefs.push(defSplits[i]);
-      //   }
-      // }
+      // console.log("Definitions---->", entireDefinitionsBox)
 
-      console.log("word of the day:", todaysWord, "(" + wordType + ")");
-      console.log("Pronunciation:", pronuciation);
-      console.log("Definitions:", defs, "...which is a", typeof(defs));
-
-      // console.log("defSplits:", defSplits.length, defSplits);
-      console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      // console.log("onlyDefs:", onlyDefs);
-      console.log("beforeExamples --->", beforeExamples.length, beforeExamples)
-
-    }
+    }//idiom of the day?
   });
 }
-
 
 // var dictionaryCrossReference = () => {
 //   request('www.dictionary.com/browse/' + todaysWord, function (err, resp, html) {
@@ -83,5 +79,7 @@ var factOfTheDay = () => {
   });
 }
 
-// merriamWebster();
+merriamWebster();
 // factOfTheDay();
+// quoteOfTheDay();
+
