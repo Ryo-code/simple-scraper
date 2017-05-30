@@ -1,10 +1,35 @@
+'use strict';
 var request = require('request');
 var cheerio = require('cheerio');
-var rp = require('request-promise');
+var rp = require('request-promise'); //使うかどうか分からない
 
-var wordOfTheDay = () => {
-  // request('https://www.merriam-webster.com/word-of-the-day', function (err, resp, html) {
-  request('https://www.merriam-webster.com/word-of-the-day/reciprocate-2017-04-17', function (err, resp, html) {
+var wiktionaryWOTD = () => {
+  request('https://en.wikiquote.org/wiki/Main_Page', (err, resp, html) => {
+    if(!err) {
+      var $ = cheerio.load(html);
+
+      //The code below looks insane because of the way they structured their HTML
+      var quoterElement = $('small').parent().parent().parent().children().children().children().children().children().children().children().has('td:contains("~")');
+      var quotedBy = quoterElement.text().trim().slice(0, -1);
+      var quoteElement = $('small').parent().parent().parent().children().children().children().children().children().children().children().children();
+      var actualQuote = quoteElement.text().trim().slice(0, -quotedBy.length -1);
+
+      console.log("Quote of the Day...");
+      console.log("");
+      console.log(actualQuote);
+      console.log("");
+      console.log(quotedBy)
+
+    }
+  })
+}
+
+wiktionaryWOTD();
+
+
+var merriamWebster = () => {
+  request('https://www.merriam-webster.com/word-of-the-day', function (err, resp, html) {
+  // request('https://www.merriam-webster.com/word-of-the-day/reciprocate-2017-04-17', (err, resp, html) => {
     if (!err) {
       var $ = cheerio.load(html);
       var todaysWord = $('.word-and-pronunciation h1').text();
@@ -33,10 +58,10 @@ var wordOfTheDay = () => {
       // console.log("onlyDefs:", onlyDefs);
       console.log("beforeExamples --->", beforeExamples.length, beforeExamples)
 
-
     }
   });
 }
+
 
 // var dictionaryCrossReference = () => {
 //   request('www.dictionary.com/browse/' + todaysWord, function (err, resp, html) {
@@ -58,5 +83,5 @@ var factOfTheDay = () => {
   });
 }
 
-wordOfTheDay();
+// merriamWebster();
 // factOfTheDay();
