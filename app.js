@@ -14,11 +14,12 @@ var quoteOfTheDay = () => {
       var quoteElement = $('small').parent().parent().parent().children().children().children().children().children().children().children().children();
       var actualQuote = quoteElement.text().trim().slice(0, -quotedBy.length -1);
 
+      console.log("==================================================")
       console.log("Quote of the Day...");
       console.log("");
       console.log(actualQuote);
       console.log("");
-      console.log(quotedBy);
+      console.log("Quoted by:", quotedBy);
 
     }
   })
@@ -73,13 +74,15 @@ var factOfTheDay = () => {
   request('https://www.beagreatteacher.com/daily-fun-fact/', function (err, resp, html) {
     if (!err) {
       var $ = cheerio.load(html);
-      var factOfTheDay = $('span:contains("Random Fact of the Day:")').parent().next().text() //It's weird because of the way their HTML is structured
-      console.log("Random fact:", factOfTheDay);
+      var factOfTheDay = $('span:contains("Random Fact of the Day:")').parent().parent().next().text();
+      var factOfTheDayBackup = $('span:contains("Random Fact of the Day:")').parent().next().text();
+      console.log("`````````````````````````````````")
+      console.log("Random fact:", factOfTheDay, factOfTheDayBackup); //One of these will work, the other won't (which is perfect)
     }
   });
 }
 
 merriamWebster();
-// factOfTheDay();
-// quoteOfTheDay();
+quoteOfTheDay();
+factOfTheDay();
 
