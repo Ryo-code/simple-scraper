@@ -20,16 +20,14 @@ var quoteOfTheDay = () => {
       console.log(actualQuote);
       console.log("");
       console.log("Quoted by:", quotedBy);
-
+      console.log("==================================================")
     }
   })
 }
 
 
-
 var merriamWebster = () => {
   request('https://www.merriam-webster.com/word-of-the-day', function (err, resp, html) {
-  // request('https://www.merriam-webster.com/word-of-the-day/reciprocate-2017-04-17', (err, resp, html) => {
     if (!err) {
       var $ = cheerio.load(html);
       var todaysWord = $('.word-and-pronunciation h1').text();
@@ -41,12 +39,12 @@ var merriamWebster = () => {
       var exampleOne = $('.wod-definition-container h2:contains("Examples")').next().text();
       var exampleTwo = $('.wod-definition-container h2:contains("Examples")').next().next().text();
       var exampleChars = exampleOne.length + exampleTwo.length
-      var definitionsOnly = entireDefinitionsBox.slice(35, -exampleChars -40).trim();
+      var definitionsOnly = entireDefinitionsBox.slice(35, -exampleChars -50).trim();
       var didYouKnow = $('.wod-did-you-know-container').children().next().text();
 
-      console.log("Word of the day:", todaysWord, "(" + wordType + ")" ,"[" + pronunciation + "]");
+      console.log(" ---===< Word of the day:", todaysWord, "(" + wordType + ")" ,"[" + pronunciation + "] >===---");
       console.log("~ ~ ~ ~ ~ ~ ~ ~ ~")
-      console.log(definitionsOnly) //You have to experiment with .slice() on different days (you could do -40, -50, etc.)
+      console.log("Definitions ====>", definitionsOnly) //You have to experiment with .slice() on different days (you could do -40, -50, etc.)
       console.log("~ ~ ~ ~ ~ ~ ~ ~ ~")
       console.log("Example 1 -->", exampleOne); //DONE!
       console.log("")
@@ -54,21 +52,10 @@ var merriamWebster = () => {
       console.log("- - - - - - - - - - - - - - - - - - - - ")
       console.log("Food for thought:", didYouKnow); //DONE!!! (though there are no italics)
 
-      // console.log("Definitions---->", entireDefinitionsBox)
-
-    }//idiom of the day?
+    }
   });
 }
 
-// var dictionaryCrossReference = () => {
-//   request('www.dictionary.com/browse/' + todaysWord, function (err, resp, html) {
-//     if (!err) {
-//       var $ = cheerio.load(html);
-//       var defList = $('def-list').text() 
-//       console.log("Definition list:", defList);
-//     }
-//   });
-// }
 
 var factOfTheDay = () => {
   request('https://www.beagreatteacher.com/daily-fun-fact/', function (err, resp, html) {
