@@ -26,7 +26,7 @@ var quoteOfTheDay = () => {
 }
 
 
-var merriamWebster = () => {
+var merriamWebsterWOTD = () => {
   request('https://www.merriam-webster.com/word-of-the-day', function (err, resp, html) {
     if (!err) {
       var $ = cheerio.load(html);
@@ -51,13 +51,12 @@ var merriamWebster = () => {
       console.log("Example 2 -->", exampleTwo); //DONE!
       console.log("- - - - - - - - - - - - - - - - - - - - ")
       console.log("Food for thought:", didYouKnow); //DONE!!! (though there are no italics)
-
     }
   });
 }
 
 
-var factOfTheDay = () => {
+var beAGreatTeacherFOTD = () => {
   request('https://www.beagreatteacher.com/daily-fun-fact/', function (err, resp, html) {
     if (!err) {
       var $ = cheerio.load(html);
@@ -69,7 +68,34 @@ var factOfTheDay = () => {
   });
 }
 
-merriamWebster();
-quoteOfTheDay();
-factOfTheDay();
 
+var redditTopNews = () => {
+  request('https://www.reddit.com/r/news/top/', function (err, resp, html) {
+    if (!err) {
+      var $ = cheerio.load(html);
+      var newsTitle = $('span.rank:contains("1")').next().next().first().children('p.title').children().next().not('span.domain').text();
+      var abbrevLink = $('span.rank:contains("1")').next().next().first().children('p.title').children().children().text();
+      var fullLink = $('span.rank:contains("1")').next().next().first().children('p.title').children().next().not('span.domain').attr('href');
+      var commentsNumbers = parseInt($('span.rank:contains("1")').next().next().first().children('p.title').next().next().children('li.first').text().trim().slice(0, -9));
+      // var commentsNumbers = parseInt($('span.rank:contains("1")').next().next().first().children('p.title').next().next().children().children().text().trim().slice(0, -14));
+      var commentsLink = $('span.rank:contains("1")').next().next().first().children('p.title').next().next().children('li.first').children('a')[0].attribs.href;
+
+      // var newsTitle = $('.entry').text();
+
+      //can we skip until it doesn't say "Soft paywall?"
+
+      console.log("`````````````````````````````````");
+      console.log("News Title  -->", newsTitle);
+      console.log("News from  --->", abbrevLink);
+      console.log("News link  --->", fullLink);
+      console.log("- - - - - - - - - - - - - - - - - -");
+      console.log("#of comments ->", commentsNumbers, typeof(commentsNumbers));
+      console.log("Comments link->", commentsLink);
+    }
+  });
+}
+
+// merriamWebsterWOTD();
+// quoteOfTheDay();
+// beAGreatTeacherFOTD();
+redditTopNews();
