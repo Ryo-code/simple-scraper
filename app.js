@@ -73,9 +73,13 @@ var redditTopNews = () => {
   request('https://www.reddit.com/r/news/top/', function (err, resp, html) {
     if (!err) {
       var $ = cheerio.load(html);
-      var newsTitle = $('span.rank:contains("1")').next().next().first().children('p.title').children().next().not('span.domain').text();
-      var abbrevLink = $('span.rank:contains("1")').next().next().first().children('p.title').children().children().text();
-      var fullLink = $('span.rank:contains("1")').next().next().first().children('p.title').children().next().not('span.domain').attr('href');
+      var softPaywallCheck = $('span.rank:contains("1")').next().next().first().children('p.title').children().text()//...
+      //Make an IF statement
+      var abbrevLink = $('span.rank:contains("1")').next().next().first().children('p.title').children().children().text(); //must be able newsTitle
+      var newsTitle = $('span.rank:contains("1")').next().next().first().children('p.title').not('span.domain').text().trim().slice(0, -abbrevLink.length -3);
+      // var newsTitleIfBehindSoftPaywall = $('span.rank:contains("1")').next().next().first().children('p.title').children().next().not('span.domain').text();
+      var fullLink = $('span.rank:contains("1")').next().next().first().children('p.title')[0].children[0].attribs.href;
+      // var fullLinkIfBehindSoftPaywall = $('span.rank:contains("1")').next().next().first().children('p.title').children().next().not('span.domain').attr('href');
       var commentsNumbers = parseInt($('span.rank:contains("1")').next().next().first().children('p.title').next().next().children('li.first').text().trim().slice(0, -9));
       // var commentsNumbers = parseInt($('span.rank:contains("1")').next().next().first().children('p.title').next().next().children().children().text().trim().slice(0, -14));
       var commentsLink = $('span.rank:contains("1")').next().next().first().children('p.title').next().next().children('li.first').children('a')[0].attribs.href;
@@ -84,18 +88,36 @@ var redditTopNews = () => {
 
       //can we skip until it doesn't say "Soft paywall?"
 
-      console.log("`````````````````````````````````");
-      console.log("News Title  -->", newsTitle);
-      console.log("News from  --->", abbrevLink);
-      console.log("News link  --->", fullLink);
+      console.log("softPaywallCheck", softPaywallCheck)
       console.log("- - - - - - - - - - - - - - - - - -");
+      // console.log("News Title (if behind a soft paywall) -->", newsTitleIfBehindSoftPaywall);
+      console.log("News Title  -->", newsTitle);
+      console.log("News source -->", abbrevLink);
+      // console.log("News link (if behind a soft paywall) --->", fullLinkIfBehindSoftPaywall);
+      console.log("Article link ->", fullLink);
+      console.log("`````````````````````````````````");
       console.log("#of comments ->", commentsNumbers, typeof(commentsNumbers));
       console.log("Comments link->", commentsLink);
     }
   });
 }
 
+
+var dailyCurio = () => {
+  request('https://curious.com/curios/daily-curio', function (err, resp, html) {
+    if (!err) {
+      var $ = cheerio.load(html);
+      var todaysCurio = $('span.date').text();
+
+      console.log("`````````````````````````````````")
+      console.log("Curio of the day:", todaysCurio); //One of these will work, the other won't (which is perfect)
+    }
+  });
+}
+
+
 // merriamWebsterWOTD();
 // quoteOfTheDay();
 // beAGreatTeacherFOTD();
 redditTopNews();
+// dailyCurio();
