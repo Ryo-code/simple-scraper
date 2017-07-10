@@ -1,7 +1,10 @@
 'use strict';
+//コードを短くするには、もっと順調なセレクターを使うべきだろう。ここ、見てみ：
+//https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048
+
 var request = require('request');
 var cheerio = require('cheerio');
-var rp = require('request-promise'); //使うかどうか分からない
+// var rp = require('request-promise'); //使うかどうか分からない
 
 var quoteOfTheDay = () => {
   request('https://en.wikiquote.org/wiki/Main_Page', (err, resp, html) => {
@@ -100,19 +103,16 @@ var redditTopNews = () => {
   request('https://www.reddit.com/r/news/top/', function (err, resp, html) {
     if (!err) {
       var $ = cheerio.load(html);
+      var todaysTopStory = $('span.rank:contains("1")').next().next().children().first('p.title').children().first();
       var NEWSobj = {};
 
-      //TODO: Test whether or not you will need a paywall checker...
-      // var softPaywallCheck = $('span.rank:contains("1")').next().next().first().children('p.title').children().text();//...
+      var abbrevLink = todaysTopStory.children().first().next().text().trim().slice(1, -1);
+      var newsTitle = todaysTopStory.children().first().text();
+      var fullLink = todaysTopStory.children().attr('href');
 
-      var abbrevLink = $('span.rank:contains("1")').next().next().first().children('p.title').children().children().text(); //must be able newsTitle
-      var newsTitle = $('span.rank:contains("1")').next().next().first().children('p.title').not('span.domain').text().trim().slice(0, -abbrevLink.length -3);
-      var fullLink = $('span.rank:contains("1")').next().next().first().children('p.title')[0].children[0].attribs.href;
-      var commentsNumbers = parseInt($('span.rank:contains("1")').next().next().first().children('p.title').next().next().children('li.first').text().trim().slice(0, -9));
-      var commentsNumbers = parseInt($('span.rank:contains("1")').next().next().first().children('p.title').next().next().children().children().text().trim().slice(0, -14));
-      var commentsLink = $('span.rank:contains("1")').next().next().first().children('p.title').next().next().children('li.first').children('a')[0].attribs.href;
+      var commentsNumbers = todaysTopStory.next().next().text().trim().slice(0, -14).trim();
+      var commentsLink = todaysTopStory.next().next().children().children().attr('href');
 
-      // console.log("softPaywallCheck", softPaywallCheck)
       console.log("- - - - - - - - - - - - - - - - - -");
       console.log("News Title  -->", newsTitle);
       console.log("News source -->", abbrevLink);
@@ -124,10 +124,10 @@ var redditTopNews = () => {
       NEWSobj.title = newsTitle;
       NEWSobj.source = abbrevLink;
       NEWSobj.articleLink = fullLink;
-      NEWSobj.numOfRedditComments = commentsNumbers;
+      NEWSobj.numOfRedditComments = parseInt(commentsNumbers);
       NEWSobj.redditLink = commentsLink;
 
-      console.log("Full NEWSobj object...", NEWSobj)
+      console.log("Full NEWSobj object...", NEWSobj);
       return NEWSobj;
     }
   });
