@@ -81,32 +81,30 @@ var beAGreatTeacherFOTD = () => {
   });
 }
 
-
-var redditTopNews = () => {
-  request('https://www.reddit.com/r/news/top/', function (err, resp, html) {
+const redditTopNews = () => {
+  request('https://www.reddit.com/r/news/top/', (err, resp, html) => {
     if (!err) {
-      var $ = cheerio.load(html);
-      var todaysTopStory = $('span.rank:contains("1")').next().next().children().first('p.title').children().first();
-      var NEWSobj = {};
+      const $ = cheerio.load(html);
+      const todaysTopStory = $('span.rank:contains("1")').next().next().children().first('p.title').children().first();
+      const abbrevLink = todaysTopStory.children().first().next().text().trim().slice(1, -1);
+      const newsTitle = todaysTopStory.children().first().text();
+      const fullLink = todaysTopStory.children().attr('href');
 
-      var abbrevLink = todaysTopStory.children().first().next().text().trim().slice(1, -1);
-      var newsTitle = todaysTopStory.children().first().text();
-      var fullLink = todaysTopStory.children().attr('href');
-
-      var commentsNumbers = todaysTopStory.next().next().text().trim().slice(0, -14).trim();
-      var commentsLink = todaysTopStory.next().next().children().children().attr('href');
+      const commentsNumbers = todaysTopStory.next().next().text().trim().slice(0, 5).trim();
+      const commentsLink = todaysTopStory.next().next().children().children().attr('href');
 
       console.log("- - - - - - - - - - - - - - - - - -");
       console.log("News Title  -->", newsTitle);
       console.log("News source -->", abbrevLink);
       console.log("Article link ->", fullLink);
-      console.log("#of comments ->", commentsNumbers, "(a", typeof(commentsNumbers), "which is now being parsedinto an integer)");
+      console.log("#of comments ->", commentsNumbers, "(a", typeof(commentsNumbers), ")");
       console.log("Comments link->", commentsLink);
       console.log("- - - - - - - - - - - - - - - - - -");
 
     }
   });
 }
+
 
 
 var dailyCurio = () => {
@@ -123,7 +121,7 @@ var dailyCurio = () => {
 
 
 // merriamWebsterWOTD();
-quoteOfTheDay();
+// quoteOfTheDay();
 // beAGreatTeacherFOTD();
-// redditTopNews();
+redditTopNews();
 // dailyCurio();
