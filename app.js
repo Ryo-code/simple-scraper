@@ -90,7 +90,7 @@ const redditTopNews = () => {
       const newsTitle = todaysTopStory.children().first().text();
       const fullLink = todaysTopStory.children().attr('href');
 
-      const commentsNumbers = todaysTopStory.next().next().text().trim().slice(0, 5).trim();
+      const commentsNumbers = todaysTopStory.next().next().text().trim().slice(0, 5).trim(); //This will potentially screw up if you have less than 1000 commenters (because it would be only 3 digits)
       const commentsLink = todaysTopStory.next().next().children().children().attr('href');
 
       console.log("- - - - - - - - - - - - - - - - - -");
