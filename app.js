@@ -86,17 +86,17 @@ const redditTopNews = () => {
     if (!err) {
       const $ = cheerio.load(html);
       const todaysTopStory = $('span.rank:contains("1")').next().next().children().first('p.title').children().first();
-      const detectIfPaywallExists = todaysTopStory.children().first().text() === "Soft paywall";
+      const detectPaywallOrTitleChange = todaysTopStory.children().first().text() === "Soft paywall" || "Site Changed Title";
 
-      const abbrevLink = detectIfPaywallExists ? todaysTopStory.children().first().next().next().text().trim().slice(1, -1) : todaysTopStory.children().first().next().text().trim().slice(1, -1);
-      const newsTitle = detectIfPaywallExists ? todaysTopStory.children().first().next().text() : todaysTopStory.children().first().text();
-      const fullLink = detectIfPaywallExists ? todaysTopStory.children().next().attr('href') : todaysTopStory.children().attr('href');
+      const abbrevLink = detectPaywallOrTitleChange ? todaysTopStory.children().first().next().next().text().trim().slice(1, -1) : todaysTopStory.children().first().next().text().trim().slice(1, -1);
+      const newsTitle = detectPaywallOrTitleChange ? todaysTopStory.children().first().next().text() : todaysTopStory.children().first().text();
+      const fullLink = detectPaywallOrTitleChange ? todaysTopStory.children().next().attr('href') : todaysTopStory.children().attr('href');
 
       const commentsNumbers = todaysTopStory.next().next().text().trim().slice(0, 4).trim();
       const commentsLink = todaysTopStory.next().next().children().children().attr('href');
       
       console.log("- - - - - - - - - - - - - - - - - -");
-      detectIfPaywallExists ? console.log("Paywall detected!") : console.log("No paywall. Proceed.")
+      detectPaywallOrTitleChange ? console.log("Paywall detected! Or maybe the site changed the title of the article...") : console.log("No problems. Proceed.")
       console.log("News Title  -->", newsTitle);
       console.log("News source -->", abbrevLink);
       console.log("Article link ->", fullLink);
