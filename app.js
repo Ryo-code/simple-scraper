@@ -86,7 +86,7 @@ const redditTopNews = () => {
     if (!err) {
       const $ = cheerio.load(html);
       const todaysTopStory = $('span.rank:contains("1")').next().next().children().first('p.title').children().first();
-      const detectPaywallOrTitleChange = todaysTopStory.children().first().text() === "Soft paywall" || "Site Changed Title";
+      const detectPaywallOrTitleChange = todaysTopStory.children().first().text() === "Soft paywall" || todaysTopStory.children().first().text() === "Site Changed Title";
 
       const abbrevLink = detectPaywallOrTitleChange ? todaysTopStory.children().first().next().next().text().trim().slice(1, -1) : todaysTopStory.children().first().next().text().trim().slice(1, -1);
       const newsTitle = detectPaywallOrTitleChange ? todaysTopStory.children().first().next().text() : todaysTopStory.children().first().text();
@@ -97,6 +97,7 @@ const redditTopNews = () => {
       
       console.log("- - - - - - - - - - - - - - - - - -");
       detectPaywallOrTitleChange ? console.log("Paywall detected! Or maybe the site changed the title of the article...") : console.log("No problems. Proceed.")
+      console.log("Detecting... ", detectPaywallOrTitleChange)
       console.log("News Title  -->", newsTitle);
       console.log("News source -->", abbrevLink);
       console.log("Article link ->", fullLink);
